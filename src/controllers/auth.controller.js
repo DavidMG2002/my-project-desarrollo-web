@@ -1,5 +1,6 @@
 // importamos el servicio de autenticación
 const authService = require('../services/auth.service');
+const { User } = require('../models/user.model');
 
 // Iniciar sesión
 

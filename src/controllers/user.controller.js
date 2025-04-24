@@ -1,13 +1,36 @@
 // Importar servicio de usuarios
 const userService = require('../services/user.service');
+const User = require('../models/user.model');
+const bcrypt = require('bcrypt');
 
 // Controlador para crear nuevos usuarios
-exports.createUser = async (req, res) => {
+/*exports.createUser = async (req, res) => {
     try { 
         const { nombre, email, password, rol_id, administrador_id } = req.body; // Se extrae los datos de la solicitud para el nuevo usuario
         const newUser = await userService.createUser(nombre, email, password, rol_id, administrador_id);
         res.status(201).json({ message: 'Usuario creado con éxito', user: newUser }); // 281 para la creacion de nuevos ususarios
     } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}; */
+
+exports.createUser = async (req, res) => {
+    try {
+        const { nombre, email, password, rol_id, administrador_id } = req.body;
+
+        if (!email || !password || !rol_id) {
+            return res.status(400).json({ message: 'Todos los campos son requeridos' });
+        }
+
+        // Hashear la contraseña antes de guardarla
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Crear el usuario con la contraseña hasheada
+        const newUser = await userService.createUser(nombre, email, hashedPassword, rol_id, administrador_id);
+
+        res.status(201).json({ message: 'Usuario creado con éxito', user: newUser });
+    } catch (err) {
+        console.error('Error al crear usuario:', err);
         res.status(500).json({ message: err.message });
     }
 };
