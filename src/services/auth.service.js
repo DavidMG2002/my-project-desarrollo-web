@@ -12,16 +12,22 @@ const SECRET_KEY = process.env.JWT_SECRET; //Obtener la clave secreta desde las 
 exports.loginUser = async (email, password) => {
     try{
         // verifica que el usuario existe
-        const user = await User.findOne({ where: (email)}); // el findOne es un modelo que se utiliza con sequelize
+        ///asasdasdasd const user = await User.findOne({ where: (email)}); // el findOne es un modelo que se utiliza con sequelize
+        const user = await User.findOne({ where: { email } });
+
         if (!user) {
             throw new Error('Usuario no encontrado');
         }
 
         //verificar si la contraseña es correcta 
         const isPasswordValid = await bcrypt.compare(password, user.password)
-        if (isPasswordValid) {
-            throw new Error('Contraseña incorrecta');
-        }
+       ///gdf if (isPasswordValid) {
+      ///DSFSD      throw new Error('Contraseña incorrecta');
+    // ggg }
+    if (!isPasswordValid) {
+        throw new Error('Contraseña incorrecta');
+    }
+    
 
         // Consultar permisos de rol
         const rolePermission = await RolePermission.findAll({

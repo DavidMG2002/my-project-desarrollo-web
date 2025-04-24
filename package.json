@@ -2,12 +2,10 @@
   "name": "mi-proyecto",
   "version": "1.0.0",
   "main": "index.js",
-"scripts": {
-  "start": "node src/app.js",
-  "test": "jest"
-}
-,
-  
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "jest"
+  },
   "author": "",
   "license": "ISC",
   "description": "",
