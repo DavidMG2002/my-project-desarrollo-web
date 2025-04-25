@@ -3,38 +3,18 @@ const userService = require('../services/user.service');
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
 
-// Controlador para crear nuevos usuarios
-/*exports.createUser = async (req, res) => {
-    try { 
-        const { nombre, email, password, rol_id, administrador_id } = req.body; // Se extrae los datos de la solicitud para el nuevo usuario
-        const newUser = await userService.createUser(nombre, email, password, rol_id, administrador_id);
-        res.status(201).json({ message: 'Usuario creado con éxito', user: newUser }); // 281 para la creacion de nuevos ususarios
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-}; */
 
 exports.createUser = async (req, res) => {
-    try {
-        const { nombre, email, password, rol_id, administrador_id } = req.body;
-
-        if (!email || !password || !rol_id) {
-            return res.status(400).json({ message: 'Todos los campos son requeridos' });
-        }
-
-        // Hashear la contraseña antes de guardarla
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Crear el usuario con la contraseña hasheada
-        const newUser = await userService.createUser(nombre, email, hashedPassword, rol_id, administrador_id);
-
-        res.status(201).json({ message: 'Usuario creado con éxito', user: newUser });
+    try { 
+        const { nombre, email, password, rol_id} = req.body; // Se extrae los datos de la solicitud para el nuevo usuario
+        console.log(req.body)
+        const newUser = await userService.createUser(nombre, email, password, rol_id);
+        res.status(201).json({ message: 'Usuario creado con éxito', user: newUser }); // 281 para la creacion de nuevos ususarios
     } catch (err) {
-        console.error('Error al crear usuario:', err);
-        res.status(500).json({ message: err.message });
+        console.log(err);
+        res.status(500).json({ message: err.message});
     }
 };
-
 // Controlador para obtener todos los usuarios asociados a un administrador 
 // req que contiene los datos de la solicitud  y res que se utiliza para enviar las solicitudes
 exports.getAllUsersByAdministradorId = async (req, res) => {
@@ -61,12 +41,13 @@ exports.getAllUsersByRolId = async (req, res) => {
 // Controlador para actualizar un usuario
 exports.updateUser = async (req, res) => {
     const { id } = req.params; // extrae el id de la URL enviado como parametro
-    const { nombre, email, rol_id, administrador_id } = req.body; // se extrae los datos actualizados 
+    const { nombre, email, rol_id } = req.body; // se extrae los datos actualizados 
     const admin_from_token = req.user.id;
     try {
-        const user = await userService.updateUser(id, nombre, email, rol_id, administrador_id, admin_from_token);
+        const user = await userService.updateUser(id, nombre, email, rol_id, admin_from_token);
         res.status(200).json({ message: 'El susuario a actualizado con éxito', user });
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: err.message });
     }
 };

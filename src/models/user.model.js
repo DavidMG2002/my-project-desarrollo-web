@@ -36,14 +36,14 @@ const User = sequelize.define('usuarios', {
         }
     }, 
     // Campo "administrador_id": clave foránea que referencia al usuario administrador.
-    administrador_id: {
+   /* administrador_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: { 
             model: 'usuarios', // Tabla relacionada: "usuarios".
             key: 'id' // Clave foránea apunta al campo "id".
         }
-    }
+    }*/
 }, {
     // Configuración adicional del modelo.
     timestamps: false, // Desactiva los campos automáticos "createdAt" y "updatedAt".
