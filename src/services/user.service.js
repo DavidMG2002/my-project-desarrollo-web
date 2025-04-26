@@ -97,3 +97,16 @@ exports.deleteUser = async (id, admin_from_token) => {
         throw new Error(`Error al eliminar el usuario: ${err.message}`);
     }
 };
+
+
+// Servicio para buscar un usuario por ID (CORRECTO) ultimo agregado
+exports.getUserById = async (userId) => {
+    const user = await User.findByPk(userId, { // <- ¡Corrige "findByPK" a "findByPk"!
+        attributes: ['id', 'nombre', 'email', 'rol_id'], // Campos a retornar
+        raw: true // Para obtener datos planos (no una instancia de Sequelize)
+    });
+    if (!user) {
+        throw new Error("Usuario no encontrado"); // Lanza error si no existe
+    }
+    return user;
+};

@@ -38,6 +38,51 @@ exports.getAllUsersByRolId = async (req, res) => {
     }
 };
 
+
+
+
+// Controlador corregido para obtener un usuario por ID
+exports.getUserById = async (req, res) => {
+    try {
+        const user = await userService.getUserById(req.params.id);
+        
+        if (!user) {
+            return res.status(404).json({ 
+                success: false,
+                message: 'Usuario no encontrado' 
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Usuario encontrado',
+            data: user
+        });
+
+    } catch (error) {
+        console.error('Error en getUserById:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al buscar el usuario',
+            error: error.message // Solo envía el mensaje de error, no todo el objeto
+        });
+    }
+};
+
+
+// Controlador para obtener un usuario por su ID único ultimo agregado
+/*exports.getUserById = async (req, res) => {
+    try {
+        const user = await userService.getUserById(req.params.id); // Llama a un servicio nuevo
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        res.status(200).json({ message: 'Usuario encontrado', user });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al buscar el usuario', error });
+    }
+};*/
+
 // Controlador para actualizar un usuario
 exports.updateUser = async (req, res) => {
     const { id } = req.params; // extrae el id de la URL enviado como parametro
