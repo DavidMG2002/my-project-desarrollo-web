@@ -1,55 +1,40 @@
-// Importamos los tipos de datos de Sequelize y la configuración de la base de datos.
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { DataTypes } = require('sequelize'); // Importamos tipos de datos de Sequelize
+const sequelize = require('../config/database'); // Importamos la instancia de conexión a la base de datos
 
-// Definimos el modelo "Proyect" (Proyectos) que representa la tabla "proyectos" en la base de datos.
-const Proyect = sequelize.define('proyectos', {
-    // Campo "id": clave primaria, numérica, auto-incremental.
+// Definimos el modelo "Proyect" (Proyectos)
+const Proyect = sequelize.define('proyectos', { // Nombre del modelo (en la BD será 'proyectos')
     id: { 
         type: DataTypes.INTEGER, 
-        primaryKey: true, // "primaryKey".
-        autoIncrement: true 
+        primaryKey: true, // Llave primaria
+        autoIncrement: true // Se autoincrementa
     },
-    // Campo "nombre": almacena el nombre del proyecto, obligatorio.
     nombre: { 
         type: DataTypes.STRING, 
-        allowNull: false 
+        allowNull: false // No puede ser nulo
     },
-    // Campo "descripcion": almacena una breve descripción del proyecto, obligatorio.
     descripcion: { 
         type: DataTypes.STRING, 
         allowNull: false 
     }, 
-    // Campo "fecha_creacion": fecha en que se creó el proyecto, con un valor por defecto (fecha actual).
     fecha_creacion: { 
         type: DataTypes.DATE, 
         allowNull: false, 
-        defaultValue: DataTypes.NOW 
-    }, 
-    // Campo "administrador_id": referencia al usuario que administra el proyecto.
-    administrador_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { 
-            model: 'usuarios', // La tabla relacionada es "usuarios".
-            key: 'id' // La clave foránea apunta al campo "id".
-        } 
-    }, 
+        defaultValue: DataTypes.NOW // Por defecto, la fecha de creación es el momento actual
+    }
+    // El campo administrador_id ha sido eliminado
 }, {
-    // Configuración adicional del modelo.
-    timestamps: false, // Desactiva los campos automáticos "createdAt" y "updatedAt".
-    tableName: 'proyectos', // Nombre explícito de la tabla en la base de datos.
+    timestamps: false, // No usar campos automáticos createdAt y updatedAt de Sequelize
+    tableName: 'proyectos', // Nombre explícito de la tabla
 
-    // Configuración de hooks: acciones automáticas tras ciertos eventos.
     hooks: {
-        afterCreate: (proyect, options) => {
-            // Ajustamos la hora de creación para que coincida con la zona horaria de Colombia.
-            if (proyect.fecha_creacion) { // Corrección: "prpyect" -> "proyect".
-                proyect.fecha_creacion.setHours(proyect.fecha_creacion.getHours() - 5); // Restamos 5 horas.
+        afterCreate: (proyect, options) => { // Hook que se ejecuta después de crear un proyecto
+            if (proyect.fecha_creacion) {
+                proyect.fecha_creacion.setHours(proyect.fecha_creacion.getHours() - 5); 
+                // Resta 5 horas a la fecha de creación (posiblemente por ajuste de zona horaria Colombia GMT-5)
             }
         }
     }
 });
 
-// Exportamos el modelo para usarlo en otras partes del proyecto.
-module.exports = Proyect;
+module.exports = Proyect; // Exportamos el modelo
+
